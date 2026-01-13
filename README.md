@@ -8,6 +8,13 @@ Create and manage smart contract wallets using device biometrics (Face ID, Touch
 ![Solidity](https://img.shields.io/badge/solidity-0.8.28-purple.svg)
 ![Mantle](https://img.shields.io/badge/network-Mantle%20L2-green.svg)
 
+
+## Demo 
+
+https://github.com/user-attachments/assets/445136dc-ba2c-4eb7-93ed-1a661c3251f0
+
+
+
 ## ✨ Features
 
 - **🔐 Seedless Authentication** - Use device biometrics instead of seed phrases
