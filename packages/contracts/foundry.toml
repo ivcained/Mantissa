@@ -1,0 +1,22 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc = "0.8.20"
+optimizer = true
+optimizer_runs = 200
+via_ir = false
+evm_version = "paris"
+
+[profile.default.fuzz]
+runs = 256
+
+# Mantle Testnet (Sepolia)
+[rpc_endpoints]
+mantle_testnet = "https://rpc.sepolia.mantle.xyz"
+mantle_mainnet = "https://rpc.mantle.xyz"
+
+# Etherscan/Block explorer verification
+[etherscan]
+mantle_testnet = { key = "${MANTLESCAN_API_KEY}", url = "https://explorer.sepolia.mantle.xyz/api" }
+mantle_mainnet = { key = "${MANTLESCAN_API_KEY}", url = "https://explorer.mantle.xyz/api" }

@@ -1,0 +1,16 @@
+# Compiler files
+cache/
+out/
+
+# Dotenv file
+.env
+
+# Broadcast files (contains private info)
+broadcast/*/run-latest.json
+broadcast/*/dry-run/
+
+# Sensitive cache
+cache/Deploy.s.sol/
+
+# OS
+.DS_Store
