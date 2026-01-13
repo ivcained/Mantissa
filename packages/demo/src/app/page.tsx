@@ -39,21 +39,36 @@ function bytesToHex(bytes: Uint8Array): string {
   return '0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Extract P-256 public key from COSE format
-function extractP256PublicKey(cosePublicKey: Uint8Array): { x: bigint; y: bigint } {
-  if (cosePublicKey.length === 65 && cosePublicKey[0] === 0x04) {
-    const x = bytesToBigInt(cosePublicKey.slice(1, 33));
-    const y = bytesToBigInt(cosePublicKey.slice(33, 65));
+// Extract P-256 public key from SPKI or COSE format
+function extractP256PublicKey(publicKeyBytes: Uint8Array): { x: bigint; y: bigint } {
+  // Raw uncompressed point format (65 bytes, starts with 0x04)
+  if (publicKeyBytes.length === 65 && publicKeyBytes[0] === 0x04) {
+    const x = bytesToBigInt(publicKeyBytes.slice(1, 33));
+    const y = bytesToBigInt(publicKeyBytes.slice(33, 65));
     return { x, y };
   }
 
-  let x: bigint = 0n;
-  let y: bigint = 0n;
+  // SPKI format (starts with 0x30, ASN.1 SEQUENCE)
+  // The uncompressed point (0x04 + 32 bytes X + 32 bytes Y) is at the end
+  if (publicKeyBytes[0] === 0x30) {
+    // Find the 0x04 marker followed by 64 bytes of key
+    for (let i = publicKeyBytes.length - 65; i >= 0; i--) {
+      if (publicKeyBytes[i] === 0x04) {
+        const x = bytesToBigInt(publicKeyBytes.slice(i + 1, i + 33));
+        const y = bytesToBigInt(publicKeyBytes.slice(i + 33, i + 65));
+        return { x, y };
+      }
+    }
+  }
 
-  for (let i = 0; i < cosePublicKey.length - 32; i++) {
-    if (cosePublicKey[i] === 0x58 && cosePublicKey[i + 1] === 0x20) {
-      const coord = cosePublicKey.slice(i + 2, i + 34);
-      if (x === 0n) {
+  // COSE format - look for 0x58 0x20 (CBOR byte string of 32 bytes)
+  let x: bigint = BigInt(0);
+  let y: bigint = BigInt(0);
+
+  for (let i = 0; i < publicKeyBytes.length - 32; i++) {
+    if (publicKeyBytes[i] === 0x58 && publicKeyBytes[i + 1] === 0x20) {
+      const coord = publicKeyBytes.slice(i + 2, i + 34);
+      if (x === BigInt(0)) {
         x = bytesToBigInt(coord);
       } else {
         y = bytesToBigInt(coord);
@@ -62,8 +77,8 @@ function extractP256PublicKey(cosePublicKey: Uint8Array): { x: bigint; y: bigint
     }
   }
 
-  if (x === 0n || y === 0n) {
-    throw new Error('Failed to extract public key');
+  if (x === BigInt(0) || y === BigInt(0)) {
+    throw new Error('Failed to extract public key from format');
   }
 
   return { x, y };
