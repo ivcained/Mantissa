@@ -1,0 +1,29 @@
+{
+    "name": "keymantle",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Passkey wallet infrastructure for Mantle L2",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "npm run build -w @mantlepass/sdk",
+        "build:contracts": "cd packages/contracts && forge build",
+        "test": "npm run test:contracts && npm run test:sdk",
+        "test:contracts": "cd packages/contracts && source ~/.zshenv && forge test",
+        "test:sdk": "npm run test -w @mantlepass/sdk",
+        "typecheck": "npm run typecheck -w @mantlepass/sdk",
+        "clean": "npm run clean -w @mantlepass/sdk && cd packages/contracts && forge clean"
+    },
+    "keywords": [
+        "mantle",
+        "passkey",
+        "webauthn",
+        "wallet",
+        "evm",
+        "account-abstraction",
+        "smart-wallet"
+    ],
+    "author": "",
+    "license": "MIT"
+}
