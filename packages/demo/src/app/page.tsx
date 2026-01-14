@@ -436,7 +436,7 @@ export default function Home() {
 
       const assertion = await navigator.credentials.get({
         publicKey: {
-          challenge: challenge,
+          challenge: challenge.buffer as ArrayBuffer,
           rpId: window.location.hostname,
           userVerification: 'required',
         },
