@@ -19,7 +19,7 @@ import { mantleSepoliaTestnet } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 
 // Contract addresses
-const FACTORY_ADDRESS = "0x876DBabB4A37cCB97D5ca4285444f1BcE06220a6";
+const FACTORY_ADDRESS = "876DBabB4A37cCB97D5ca4285444f1BcE06220a6";
 const RPC_URL = "https://rpc.sepolia.mantle.xyz";
 
 // ABIs
